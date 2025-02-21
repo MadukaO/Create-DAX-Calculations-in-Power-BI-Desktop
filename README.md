@@ -67,3 +67,73 @@ DAX enables users to create calculated columns, measures, and tables, helping th
 ## Conclusion
 Creating DAX calculations in Power BI enhances data analysis and reporting. By leveraging calculated columns, measures, and interactive dashboard elements, users can gain deeper insights into their data. Mastering DAX functions and visualization techniques will empower you to create dynamic, data-driven reports in Power BI Desktop.
 
+# Salesperson, Sales, and Target Analysis in Power BI Using DAX
+
+## Introduction
+Power BI is a powerful tool for data visualization and business intelligence. Using DAX (Data Analysis Expressions), we can analyze sales performance, track targets, and evaluate individual salesperson performance effectively. This document explores how to perform sales and target analysis in Power BI using DAX.
+
+## Data Model
+A typical data model for sales analysis consists of the following tables:
+- **Sales Table**: Contains transaction-level sales data, including date, salesperson, product, and revenue.
+- **Target Table**: Stores sales targets for each salesperson over different time periods.
+- **Salesperson Table**: Contains details of salespersons, such as name, region, and department.
+- **Date Table**: A calendar table used for time-based analysis.
+
+### Relationships
+- The **Sales Table** is related to the **Salesperson Table** through the `SalespersonID`.
+- The **Sales Table** and **Target Table** are related via `SalespersonID` and `Date`.
+- The **Date Table** is linked to both the **Sales Table** and **Target Table** through the `Date` field.
+
+## Key DAX Measures
+
+### 1. Total Sales
+Calculates the total sales revenue for a given period.
+```DAX
+Total Sales = SUM(Sales[Revenue])
+```
+
+### 2. Sales Target
+Retrieves the target assigned to each salesperson.
+```DAX
+Sales Target = SUM(Targets[TargetAmount])
+```
+
+### 3. Sales Performance Against Target
+Calculates the percentage of the target achieved by each salesperson.
+```DAX
+Target Achievement % =
+DIVIDE([Total Sales], [Sales Target], 0) * 100
+```
+
+### 4. Variance Between Sales and Target
+Shows how much a salesperson is above or below the target.
+```DAX
+Sales Variance = [Total Sales] - [Sales Target]
+```
+
+### 5. Top Performing Salespersons
+Ranks salespersons based on their sales performance.
+```DAX
+Sales Rank =
+RANKX(ALL(Salesperson), [Total Sales], , DESC, DENSE)
+```
+
+### 6. Moving Average Sales (3-month period)
+Smooths out sales trends over time.
+```DAX
+Moving Avg Sales =
+AVERAGEX(DATESINPERIOD('Date'[Date], LASTDATE('Date'[Date]), -3, MONTH), [Total Sales])
+```
+
+## Visualizations in Power BI
+To make the analysis insightful, we can create the following visuals:
+
+- **Sales Performance by Salesperson**: A bar chart showing total sales and targets.
+- **Sales Target Achievement %**: A KPI card or gauge to show how well targets are met.
+- **Sales Variance Heatmap**: A matrix or conditional formatting to highlight over/underperformance.
+- **Top 10 Salespersons**: A ranked table or column chart.
+- **Trend Analysis**: A line chart showing total sales and moving average sales over time.
+
+## Conclusion
+By leveraging DAX in Power BI, businesses can gain deep insights into salesperson performance, sales trends, and target achievement. This approach helps in strategic decision-making and enhances sales efficiency through data-driven insights.
+
